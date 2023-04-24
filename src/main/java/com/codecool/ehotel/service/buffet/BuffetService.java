@@ -1,5 +1,14 @@
 package com.codecool.ehotel.service.buffet;
 
-public interface BuffetService {
+import com.codecool.ehotel.model.Buffet;
+import com.codecool.ehotel.model.MealDurability;
+import com.codecool.ehotel.model.MealType;
 
+import java.util.Map;
+
+public interface BuffetService {
+    //TODO:
+    public void refill(Map<MealType, Integer > portions);
+    public boolean consumeFreshest(MealType mealType);
+    public int collectWaste(MealDurability mealDurability);
 }
