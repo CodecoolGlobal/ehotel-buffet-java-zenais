@@ -12,4 +12,6 @@ public interface GuestService {
 
     Set<Guest> getGuestsForDay(List<Guest> guests, LocalDate date);
 
+    public Guest generateRandomGuest();
+
 }
