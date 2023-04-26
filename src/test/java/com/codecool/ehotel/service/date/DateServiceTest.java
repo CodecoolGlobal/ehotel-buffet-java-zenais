@@ -12,18 +12,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.*;
 
 class DateServiceTest {
-
     DateService dateService = new DateService();
-
-    @ParameterizedTest
-    @MethodSource("seasons")
+    @Test
     void getRandomDateInSeasonTest() {
-        //TODO:
         LocalDate seasonStart = LocalDate.parse("2023-01-01");
-        LocalDate seasonEnd = LocalDate.parse("2023-02-01");
-        LocalDate result = dateService.getRandomDateInSeason(seasonStart, seasonEnd);
-    }
+        LocalDate seasonEnd = LocalDate.parse("2023-01-10");
+        for (int i = 0; i < 100; i++) {
+            LocalDate result = dateService.getRandomDateInSeason(seasonStart, seasonEnd);
+            assertTrue(dateService.isBetweenInclusive(seasonStart,seasonEnd, result));
+        }
 
+    }
     public static Stream<Arguments> dates() {
         return Stream.of(
                 of( LocalDate.parse("2022-01-01"), 30, LocalDate.parse("2022-01-10")),
