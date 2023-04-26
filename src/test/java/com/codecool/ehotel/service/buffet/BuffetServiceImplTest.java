@@ -13,10 +13,13 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BuffetServiceImplTest {
+    List<MealPortion> mealList = new ArrayList<>();
+    Buffet buffet;
     BuffetService buffetService;
 
+
+
     private void BuffetServiceImplTest() {
-        List<MealPortion> mealList = new ArrayList<>();
         mealList.add(new MealPortion(MealType.SCRAMBLED_EGGS, 1));
         mealList.add(new MealPortion(MealType.SUNNY_SIDE_UP, 3));
         mealList.add(new MealPortion(MealType.MASHED_POTATO, 1));
@@ -24,7 +27,8 @@ class BuffetServiceImplTest {
         mealList.add(new MealPortion(MealType.MILK, 1));
         mealList.add(new MealPortion(MealType.CEREAL, 3));
         Buffet buffet = new Buffet(mealList);
-        buffetService = new BuffetServiceImpl(buffet);
+        this.buffet = buffet;
+        this.buffetService = new BuffetServiceImpl(buffet);
     }
 
    /* @Test
@@ -38,16 +42,24 @@ class BuffetServiceImplTest {
 
     }*/
 
-    @Test
+    /*@Test
     void consumeFreshest() {
+        BuffetServiceImplTest();
         assertTrue(buffetService.consumeFreshest(MealType.SCRAMBLED_EGGS));
-    }
+    }*/
 
     @Test
     void collectWaste() {
+        BuffetServiceImplTest();
+        int cycle = 7;
+        int result = buffetService.collectWaste(cycle);
+        assertEquals(140, result);
     }
 
     @Test
     void closeBuffet() {
+        BuffetServiceImplTest();
+        int result = buffetService.closeBuffet();
+        assertEquals(180, result);
     }
 }

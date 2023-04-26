@@ -46,21 +46,23 @@ public class BuffetServiceImpl implements BuffetService {
     public int collectWaste(int buffetCycle) {
         int costOfThrownAwayMeals = 0;
 
-            for (MealPortion portion : mealsOnDisplay) {
-                if (portion.meal().getDurability() == MealDurability.SHORT && buffetCycle - portion.servedAtCycle() == 3) {
-                    costOfThrownAwayMeals += portion.meal().getCost();
-                    mealsOnDisplay.remove(portion);
+            for (int i = 0; i < mealsOnDisplay.size(); i++) {
+                if (mealsOnDisplay.get(i).meal().getDurability() == MealDurability.SHORT && buffetCycle - mealsOnDisplay.get(i).servedAtCycle() > 2) {
+                    costOfThrownAwayMeals += mealsOnDisplay.get(i).meal().getCost();
+                    mealsOnDisplay.remove(i);
+                    i--;
                 }
             }
-        //TODO: Martin please write Tests
+        //TODO: Martin
         return costOfThrownAwayMeals;
     }
     public int closeBuffet() {
     int costOfThrownAwayMeals = 0;
-        for (MealPortion portion : mealsOnDisplay) {
-            if (portion.meal().getDurability() != MealDurability.LONG) {
-                costOfThrownAwayMeals += portion.meal().getCost();
-                mealsOnDisplay.remove(portion);
+        for (int i = 0; i < mealsOnDisplay.size(); i++) {
+            if (mealsOnDisplay.get(i).meal().getDurability() != MealDurability.LONG) {
+                costOfThrownAwayMeals += mealsOnDisplay.get(i).meal().getCost();
+                mealsOnDisplay.remove(i);
+                i--;
             }
         }
         return costOfThrownAwayMeals;
