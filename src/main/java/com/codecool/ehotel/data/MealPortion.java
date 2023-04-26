@@ -4,5 +4,5 @@ import com.codecool.ehotel.model.MealType;
 
 import java.sql.Timestamp;
 
-public record MealPortion(MealType meal, Timestamp timestamp) {
+public record MealPortion(MealType meal, int servedAtCycle) {
 }
