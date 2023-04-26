@@ -30,7 +30,7 @@ public class EHotelBuffetApplication {
         // Initialize services
         Buffet buffet = new Buffet(new ArrayList<>());
         DateService dateService = new DateService();
-        GuestService guestService = new GuestServiceImpl(dateService, GuestType.values());
+        GuestServiceImpl<GuestType> guestService = new GuestServiceImpl<>(dateService, GuestType.values());
         BuffetService buffetService = new BuffetServiceImpl(buffet);
         BreakfastGroupProvider breakfastGroupProvider = new BreakfastGroupProvider();
 
@@ -40,8 +40,9 @@ public class EHotelBuffetApplication {
         // Run breakfast buffet
         breakfastManager.simulateSeason();
         // Run dinner service
-        GuestService dinnerGuestService = new GuestServiceImpl(dateService, DinnerGuestType.values());
-        List<Guest> allDinnerGuests = guestService.generateAllGuests(seasonStart, seasonEnd, numberOfGuests, 1);
+
+        GuestServiceImpl<DinnerGuestType> dinnerGuestService = new GuestServiceImpl<DinnerGuestType>(dateService, DinnerGuestType.values());
+        List<Guest> allDinnerGuests = dinnerGuestService.generateAllGuests(seasonStart, seasonEnd, numberOfGuests, 1);
         DinnerManager dinnerManager = new DinnerManager(allDinnerGuests, seasonStart, seasonEnd);
         dinnerManager.simulateSeason();
 
