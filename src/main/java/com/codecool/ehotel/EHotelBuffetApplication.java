@@ -1,7 +1,8 @@
 package com.codecool.ehotel;
 
 import com.codecool.ehotel.model.Buffet;
-import com.codecool.ehotel.model.Menu;
+import com.codecool.ehotel.model.DinnerGuestType;
+import com.codecool.ehotel.model.GuestType;
 import com.codecool.ehotel.service.buffet.BuffetService;
 import com.codecool.ehotel.service.buffet.BuffetServiceImpl;
 
@@ -18,8 +19,6 @@ import com.codecool.ehotel.service.guest.GuestServiceImpl;
 
 import java.time.LocalDate;
 
-import static java.awt.SystemColor.menu;
-
 public class EHotelBuffetApplication {
 
     public static void main(String[] args) {
@@ -31,7 +30,7 @@ public class EHotelBuffetApplication {
         // Initialize services
         Buffet buffet = new Buffet(new ArrayList<>());
         DateService dateService = new DateService();
-        GuestService guestService = new GuestServiceImpl(dateService);
+        GuestService guestService = new GuestServiceImpl(dateService, GuestType.values());
         BuffetService buffetService = new BuffetServiceImpl(buffet);
         BreakfastGroupProvider breakfastGroupProvider = new BreakfastGroupProvider();
 
@@ -41,8 +40,8 @@ public class EHotelBuffetApplication {
         // Run breakfast buffet
         breakfastManager.simulateSeason();
         // Run dinner service
+        GuestService dinnerGuestService = new GuestServiceImpl(dateService, DinnerGuestType.values());
         List<Guest> allDinnerGuests = guestService.generateAllGuests(seasonStart, seasonEnd, numberOfGuests, 1);
-
         DinnerManager dinnerManager = new DinnerManager(allDinnerGuests, seasonStart, seasonEnd);
         dinnerManager.simulateSeason();
 
