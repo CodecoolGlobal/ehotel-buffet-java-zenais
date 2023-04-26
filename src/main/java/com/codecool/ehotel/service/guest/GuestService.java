@@ -8,10 +8,9 @@ import java.util.Set;
 
 public interface GuestService {
 
-    Guest generateRandomGuest(LocalDate seasonStart, LocalDate seasonEnd);
+    List<Guest> generateAllGuests(LocalDate seasonStart, LocalDate seasonEnd, int numberOfGuests);
 
     Set<Guest> getGuestsForDay(List<Guest> guests, LocalDate date);
 
-    public Guest generateRandomGuest();
-
+    Guest generateRandomGuest(int maxStay, LocalDate seasonStart, LocalDate seasonEnd);
 }
