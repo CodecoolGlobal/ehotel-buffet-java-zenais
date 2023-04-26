@@ -1,5 +1,10 @@
 package com.codecool.ehotel.model;
 
-public record Buffet () {
+import com.codecool.ehotel.data.MealPortion;
+
+import java.util.List;
+
+public record Buffet (List<MealPortion> mealsOnDisplay) {
+
     //TODO:Martin
 }
