@@ -10,5 +10,5 @@ public interface BuffetService {
     //TODO:
     public void refill(Map<MealType, Integer > portions);
     public boolean consumeFreshest(MealType mealType);
-    public int collectWaste(MealDurability mealDurability);
+    public int collectWaste(MealDurability mealDurability, int buffetCycle);
 }

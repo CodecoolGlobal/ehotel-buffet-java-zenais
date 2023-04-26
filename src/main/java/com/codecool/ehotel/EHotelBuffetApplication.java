@@ -2,6 +2,7 @@ package com.codecool.ehotel;
 
 import com.codecool.ehotel.data.MealPortion;
 import com.codecool.ehotel.model.Buffet;
+import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
 import com.codecool.ehotel.service.buffet.BuffetService;
 import com.codecool.ehotel.service.buffet.BuffetServiceImpl;
@@ -17,7 +18,7 @@ public class EHotelBuffetApplication {
 
         // Initialize services
         Buffet buffet = new Buffet(new ArrayList<>());
-        BuffetServiceImpl buffetServiceImpl = new BuffetServiceImpl(buffet);
+        BuffetService buffetService = new BuffetServiceImpl(buffet);
 
 
         // Generate guests for the season
