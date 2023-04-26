@@ -28,8 +28,7 @@ public class BreakfastGroupProvider {
     private List<Set<Guest>> initalizeEmptyList(int numberOfGroups) {
         List<Set<Guest>> guestGroups = new ArrayList<>();
         for (long count = numberOfGroups; count > 0; count--) {
-            HashSet<Guest> objects = new HashSet<>();
-            guestGroups.add(objects);
+            guestGroups.add(new HashSet<>());
         }
         return guestGroups;
     }
