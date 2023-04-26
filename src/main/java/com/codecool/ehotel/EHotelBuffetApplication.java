@@ -1,6 +1,7 @@
 package com.codecool.ehotel;
 
 import com.codecool.ehotel.model.Buffet;
+import com.codecool.ehotel.model.Menu;
 import com.codecool.ehotel.service.buffet.BuffetService;
 import com.codecool.ehotel.service.buffet.BuffetServiceImpl;
 
@@ -11,10 +12,13 @@ import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.service.breakfast.BreakfastManager;
 import com.codecool.ehotel.service.breakfastGroup.BreakfastGroupProvider;
 import com.codecool.ehotel.service.date.DateService;
+import com.codecool.ehotel.service.dinner.DinnerManager;
 import com.codecool.ehotel.service.guest.GuestService;
 import com.codecool.ehotel.service.guest.GuestServiceImpl;
 
 import java.time.LocalDate;
+
+import static java.awt.SystemColor.menu;
 
 public class EHotelBuffetApplication {
 
@@ -26,7 +30,6 @@ public class EHotelBuffetApplication {
 
         // Initialize services
         Buffet buffet = new Buffet(new ArrayList<>());
-        BuffetServiceImpl buffetServiceImpl = new BuffetServiceImpl(buffet);
         DateService dateService = new DateService();
         GuestService guestService = new GuestServiceImpl(dateService);
         BuffetService buffetService = new BuffetServiceImpl(buffet);
@@ -34,9 +37,14 @@ public class EHotelBuffetApplication {
 
         // Generate guests for the season
         List<Guest> allGuests = guestService.generateAllGuests(seasonStart, seasonEnd, numberOfGuests, maxStay);
-        BreakfastManager breakfastManager = new BreakfastManager(guestService, buffetService,  breakfastGroupProvider, allGuests,seasonStart,seasonEnd);
+        BreakfastManager breakfastManager = new BreakfastManager(guestService, buffetService, breakfastGroupProvider, allGuests, seasonStart, seasonEnd);
         // Run breakfast buffet
         breakfastManager.simulateSeason();
+        // Run dinner service
+        List<Guest> allDinnerGuests = guestService.generateAllGuests(seasonStart, seasonEnd, numberOfGuests, 1);
+
+        DinnerManager dinnerManager = new DinnerManager(allDinnerGuests, seasonStart, seasonEnd);
+        dinnerManager.simulateSeason();
 
     }
 }
