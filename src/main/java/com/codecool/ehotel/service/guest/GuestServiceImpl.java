@@ -5,27 +5,37 @@ import com.codecool.ehotel.model.GuestType;
 import com.codecool.ehotel.service.date.DateService;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
-
-import static java.lang.Math.random;
+import java.util.*;
 
 public class GuestServiceImpl implements GuestService {
-
+    DateService dateService;
+    public GuestServiceImpl(DateService dateService){
+        this.dateService = new DateService();
+    }
 
     @Override
-    public List<Guest> generateAllGuests(LocalDate seasonStart, LocalDate seasonEnd, int numberOfGuests) {
-
-        return null;
+    public List<Guest> generateAllGuests(LocalDate seasonStart, LocalDate seasonEnd, int numberOfGuests, int maxStay) {
+        //TODO: Create Tests
+        List<Guest> allGuests = new ArrayList<>();
+        int counter = 0;
+        while (counter < numberOfGuests) {
+            Guest guest = generateRandomGuest(maxStay, seasonStart, seasonEnd);
+            allGuests.add(guest);
+            counter++;
+        }
+        return allGuests;
     }
 
     @Override
     public Set<Guest> getGuestsForDay(List<Guest> guests, LocalDate date) {
-        //TODO: Chris
-        return null;
+        Set<Guest> guestsForDay = new HashSet<>();
+        //TODO: Create Tests
+        for (Guest guest : guests) {
+            if (dateService.isBetweenInclusive(guest.checkIn(),guest.checkOut(),date)){
+                guestsForDay.add(guest);
+            }
+        }
+        return guestsForDay;
     }
 
     @Override
@@ -34,8 +44,8 @@ public class GuestServiceImpl implements GuestService {
         GuestType[] types = GuestType.values();
         String name = UUID.randomUUID().toString().substring(0, 8).trim();
         GuestType guestType = types[new Random().nextInt(types.length)];
-        LocalDate checkIn = DateService.getRandomDateInSeason(seasonStart, seasonEnd);
-        LocalDate checkOut = DateService.getCheckOutDate(checkIn, maxStay, seasonEnd);
+        LocalDate checkIn = dateService.getRandomDateInSeason(seasonStart, seasonEnd);
+        LocalDate checkOut = dateService.getCheckOutDate(checkIn, maxStay, seasonEnd);
         return new Guest(name, guestType, checkIn, checkOut);
     }
 }
