@@ -3,6 +3,6 @@ package com.codecool.ehotel.model;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public record Guest(String name, GuestType guestType, LocalDate checkIn, LocalDate checkOut) {
+public record Guest <T>(String name, T guestType, LocalDate checkIn, LocalDate checkOut) {
 
 }
