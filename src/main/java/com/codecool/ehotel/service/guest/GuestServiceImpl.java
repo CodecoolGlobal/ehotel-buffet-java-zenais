@@ -1,17 +1,19 @@
 package com.codecool.ehotel.service.guest;
 
 import com.codecool.ehotel.model.Guest;
-import com.codecool.ehotel.model.GuestType;
 import com.codecool.ehotel.service.date.DateService;
 
 import java.time.LocalDate;
 import java.util.*;
 
-public class GuestServiceImpl implements GuestService {
+public class GuestServiceImpl<T extends Enum<T>> implements GuestService {
     DateService dateService;
-    public GuestServiceImpl(DateService dateService){
+    T[] types;
+    public GuestServiceImpl(DateService dateService,T[] types){
         this.dateService = new DateService();
+        this.types = types;
     }
+
 
     @Override
     public List<Guest> generateAllGuests(LocalDate seasonStart, LocalDate seasonEnd, int numberOfGuests, int maxStay) {
@@ -41,11 +43,11 @@ public class GuestServiceImpl implements GuestService {
     @Override
     public Guest generateRandomGuest(int maxStay, LocalDate seasonStart, LocalDate seasonEnd) {
         //TODO: create Test
-        GuestType[] types = GuestType.values();
         String name = UUID.randomUUID().toString().substring(0, 8).trim();
-        GuestType guestType = types[new Random().nextInt(types.length)];
+        T guestType = types[new Random().nextInt(types.length)];
         LocalDate checkIn = dateService.getRandomDateInSeason(seasonStart, seasonEnd);
         LocalDate checkOut = dateService.getCheckOutDate(checkIn, maxStay, seasonEnd);
-        return new Guest(name, guestType, checkIn, checkOut);
+        return new Guest<T>(name, guestType, checkIn, checkOut);
     }
+
 }
