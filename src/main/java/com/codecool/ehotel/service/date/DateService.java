@@ -7,7 +7,6 @@ import static java.lang.Math.random;
 
 public class DateService {
     public LocalDate getRandomDateInSeason(LocalDate seasonStart, LocalDate seasonEnd) {
-        //TODO: create test
         int dateDifference = (int) ChronoUnit.DAYS.between(seasonStart, seasonEnd);
         LocalDate checkIn;
         do {
@@ -17,7 +16,6 @@ public class DateService {
     }
 
     public LocalDate getCheckOutDate(LocalDate checkIn, int maxStay, LocalDate seasonEnd) {
-        //TODO: create test
         LocalDate checkOut;
         do {
             checkOut = checkIn.plusDays((long) (random() * maxStay));
@@ -26,7 +24,6 @@ public class DateService {
     }
 
     public boolean isBetweenInclusive(LocalDate firstDate, LocalDate secondDate, LocalDate date){
-        //TODO: create test
         return !date.isBefore(firstDate) && !date.isAfter(secondDate);
     }
 }
