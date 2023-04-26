@@ -1,6 +1,7 @@
 package com.codecool.ehotel.service.guest;
 
 import com.codecool.ehotel.model.Guest;
+import com.codecool.ehotel.model.GuestType;
 import com.codecool.ehotel.service.date.DateService;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GuestServiceImplTest {
 
     DateService dateService = new DateService();
-    GuestService guestService = new GuestServiceImpl(dateService);
+    GuestService guestService = new GuestServiceImpl(dateService, GuestType.values());
     LocalDate seasonStart = LocalDate.parse("2022-01-01");
     LocalDate seasonEnd = LocalDate.parse("2022-02-01");
     int numberOfGuestsExpected = 100;
