@@ -52,8 +52,9 @@ public class BreakfastManager {
         // get optimal portions
         //
         Map<MealType, Integer> mealTypeIntegerMap = null;
+        int cycle = 1;
 
-        buffetService.refill(mealTypeIntegerMap);
+        buffetService.refill(mealTypeIntegerMap, cycle);
     }
 
     public Map<MealType, Integer> getOptimalPortions(Buffet buffet, Map<GuestType, Integer > numberOfGuestsPerType, int cyclesLeft, int assumedCostOfUnhappyGuest){
