@@ -45,22 +45,22 @@ public class BuffetServiceImpl implements BuffetService {
     @Override
     public int collectWaste(MealDurability mealDurability, int buffetCycle) {
         int costOfThrownAwayMeals = 0;
-        if (buffetCycle == 6) {
-            for (MealPortion portion : mealsOnDisplay) {
-                if (portion.meal().getDurability() == MealDurability.SHORT || portion.meal().getDurability() == MealDurability.MEDIUM) {
+        if (buffetCycle == 6) { //we don't know if there are 6 cycles
+            for (MealPortion portion : mealsOnDisplay) {//the same loop repeats twice, once is more than enough
+                if (portion.meal().getDurability() == MealDurability.SHORT || portion.meal().getDurability() == MealDurability.MEDIUM) { //too complicated Logic, please refactor
                     costOfThrownAwayMeals += portion.meal().getCost();
                     mealsOnDisplay.remove(portion);
                 }
             }
-        } else if (buffetCycle >= 4 && buffetCycle < 6) {
+        } else if (buffetCycle >= 4 && buffetCycle < 6) {//refactoring needed, irrelevant if the the buffetCycle is last
             for (MealPortion portion : mealsOnDisplay) {
-                if (portion.meal().getDurability() == MealDurability.SHORT && buffetCycle - portion.servedAtCycle() == 3) {
-                    costOfThrownAwayMeals += portion.meal().getCost();
+                if (portion.meal().getDurability() == MealDurability.SHORT && buffetCycle - portion.servedAtCycle() == 3) {//please SLAP this
+                    costOfThrownAwayMeals += portion.meal().getCost(); //method repeates twice, rethink order
                     mealsOnDisplay.remove(portion);
                 }
             }
         }
-        //TODO: Martin
+        //TODO: Martin please write Tests
         return costOfThrownAwayMeals;
     }
 }
