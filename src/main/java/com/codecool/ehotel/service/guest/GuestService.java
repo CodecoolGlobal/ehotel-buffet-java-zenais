@@ -18,4 +18,6 @@ public interface GuestService{
     Guest generateRandomGuest(int maxStay, LocalDate seasonStart, LocalDate seasonEnd);
 
     Map<GuestType, Integer> getNumberOfGuestsPerType(Set<Guest> guestsForDay);
+
+    void removeGuestFromTypeMap(Guest guest, Map<GuestType, Integer> numberGuestsPerType);
 }

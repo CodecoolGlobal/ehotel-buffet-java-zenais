@@ -22,7 +22,7 @@ import java.time.LocalDate;
 public class EHotelBuffetApplication {
 
     public static void main(String[] args) {
-        int numberOfGuests = 10;
+        int numberOfGuests = 150;
         int maxStay = 7;
         LocalDate seasonStart = LocalDate.parse("2023-01-01");
         LocalDate seasonEnd = LocalDate.parse("2023-02-01");
@@ -36,7 +36,7 @@ public class EHotelBuffetApplication {
 
         // Generate guests for the season
         List<Guest> allGuests = guestService.generateAllGuests(seasonStart, seasonEnd, numberOfGuests, maxStay);
-        BreakfastManager breakfastManager = new BreakfastManager(guestService, buffetService, breakfastGroupProvider, allGuests, seasonStart, seasonEnd);
+        BreakfastManager breakfastManager = new BreakfastManager(buffet, guestService, buffetService, breakfastGroupProvider, allGuests, seasonStart, seasonEnd);
         // Run breakfast buffet
         breakfastManager.simulateSeason();
         // Run dinner service
