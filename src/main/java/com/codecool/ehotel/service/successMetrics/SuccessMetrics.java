@@ -1,7 +1,6 @@
 package com.codecool.ehotel.service.successMetrics;
 
-import com.codecool.ehotel.model.Constants;
-import com.codecool.ehotel.model.GuestSatisfactionStatistics;
+import com.codecool.ehotel.model.MealServiceStatistics;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.List;
 public class SuccessMetrics {
     int unhappyGuests;
     int costOfWastedFood;
-    private List<GuestSatisfactionStatistics> statistics;
+    private List<MealServiceStatistics> statistics;
 
     int totalGuests;
     public SuccessMetrics(int unhappyGuests, int costOfWastedFood, int totalGuests){
@@ -25,11 +24,11 @@ public class SuccessMetrics {
     }
 
     public void addStatistics(LocalDate date, int guestSatisfaction, int guestsOnDay, int costOfWaste, int costTotal, int totalGuests){
-        GuestSatisfactionStatistics dailyStatistics = new GuestSatisfactionStatistics(date, guestSatisfaction, guestsOnDay, costOfWaste, costTotal,totalGuests);
+        MealServiceStatistics dailyStatistics = new MealServiceStatistics(date, guestSatisfaction, guestsOnDay, costOfWaste, costTotal,totalGuests);
         statistics.add(dailyStatistics);
     }
 
-    public List<GuestSatisfactionStatistics> getStatistics() {
+    public List<MealServiceStatistics> getStatistics() {
         return statistics;
     }
 
@@ -51,13 +50,13 @@ public class SuccessMetrics {
     public int getTotalGuests() { return totalGuests;}
 
     public double getAverageSatisfaction() {
-        double satisfationTotal = statistics.stream().map(GuestSatisfactionStatistics::guestSatisfaction).reduce(0, Integer::sum);
+        double satisfationTotal = statistics.stream().map(MealServiceStatistics::guestSatisfaction).reduce(0, Integer::sum);
         return satisfationTotal / statistics.size();
     }
 
     public double getCostWasteRatio() {
-        double WasteTotal = statistics.stream().map(GuestSatisfactionStatistics::costOfWaste).reduce(0, Integer::sum);
-        double CostTotalAll = statistics.stream().map(GuestSatisfactionStatistics::costTotal).reduce(0, Integer::sum);
+        double WasteTotal = statistics.stream().map(MealServiceStatistics::costOfWaste).reduce(0, Integer::sum);
+        double CostTotalAll = statistics.stream().map(MealServiceStatistics::costTotal).reduce(0, Integer::sum);
         return WasteTotal/CostTotalAll;
     }
 }

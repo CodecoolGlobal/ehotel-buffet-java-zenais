@@ -1,9 +1,8 @@
 package com.codecool.ehotel.ui;
 
-import com.codecool.ehotel.model.GuestSatisfactionStatistics;
+import com.codecool.ehotel.model.MealServiceStatistics;
 import com.codecool.ehotel.service.successMetrics.SuccessMetrics;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class Screen {
@@ -21,8 +20,8 @@ public class Screen {
         System.out.println("==========================");
     }
 
-    public void printGuestStatistics(List<GuestSatisfactionStatistics> statistics,double averageSatisfaction,double vasteCostRatio) {
-        for (GuestSatisfactionStatistics stats : statistics) {
+    public void printGuestStatistics(List<MealServiceStatistics> statistics, double averageSatisfaction, double vasteCostRatio) {
+        for (MealServiceStatistics stats : statistics) {
             System.out.format("%-12s | Satisfaction: %2d %% | Daily visit: %2d | Waste cost: %3d coins | Total cost: %d\n",
                     stats.date().toString(),
                     stats.guestSatisfaction(),
