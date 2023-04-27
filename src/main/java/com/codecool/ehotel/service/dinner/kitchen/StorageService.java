@@ -9,11 +9,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class Storage {
+public class StorageService {
     List<StorageItem> storageItems;
     Map<Ingredient, Integer> ingredientCounter;
 
-    public Storage(List<StorageItem> storageItems) {
+    public StorageService(List<StorageItem> storageItems) {
         this.storageItems = new LinkedList<>(storageItems);
         ingredientCounter = countIngredients(storageItems);
     }
@@ -43,20 +43,20 @@ public class Storage {
         }
     }
 
-    public void removeItem(Ingredient ingredient) {
-        if (!hasIngredient(ingredient)) {
-            return;
-        }
-        for (int storageIndex = storageItems.size() - 1; storageIndex >= 0; storageIndex--) {
-            StorageItem storageItem = storageItems.get(storageIndex);
-            Integer quantity = ingredientCounter.get(ingredient);
+    public StorageItem removeItem(Ingredient ingredient) {
+        if (hasIngredient(ingredient)) {
+            for (int storageIndex = storageItems.size() - 1; storageIndex >= 0; storageIndex--) {
+                StorageItem storageItem = storageItems.get(storageIndex);
+                Integer quantity = ingredientCounter.get(ingredient);
 
-            if (storageItem.ingredient().equals(ingredient)) {
-                storageItems.remove(storageItem);
-                ingredientCounter.replace(ingredient, quantity, quantity - 1);
-                return;
+                if (storageItem.ingredient().equals(ingredient)) {
+                    ingredientCounter.replace(ingredient, quantity, quantity - 1);
+                    storageItems.remove(storageItem);
+                    return storageItem;
+                }
             }
         }
+        return null;
     }
 
     public boolean hasIngredient(Ingredient ingredient) {
@@ -73,7 +73,7 @@ public class Storage {
         int sumCostOfWaste = 0;
         List<StorageItem> freshStorageItems = new LinkedList<>();
         for (StorageItem item : this.storageItems) {
-            if (item.expiryDate().isAfter(date)){
+            if (item.expiryDate().isAfter(date)) {
                 freshStorageItems.add(item);
             } else {
                 sumCostOfWaste += item.ingredient().getCost();
@@ -87,7 +87,6 @@ public class Storage {
     public List<StorageItem> getStorageItems() {
         return this.storageItems;
     }
-
 
 
     public Map<Ingredient, Integer> getIngredientCounter() {
