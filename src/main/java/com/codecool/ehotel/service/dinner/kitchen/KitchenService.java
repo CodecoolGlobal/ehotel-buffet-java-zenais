@@ -7,7 +7,7 @@ import java.time.Period;
 import java.util.*;
 
 public class KitchenService {
-    private StorageService storageService;
+    private final StorageService  storageService;
 
     public KitchenService(StorageService storageService) {
         this.storageService = storageService;

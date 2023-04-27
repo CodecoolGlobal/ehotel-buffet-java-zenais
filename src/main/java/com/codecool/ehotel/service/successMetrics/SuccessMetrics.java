@@ -13,7 +13,6 @@ public class SuccessMetrics {
     public int getNumberOfUnhappyGuests(){
         return unhappyGuests;
     }
-
     public void addUnhappyGuests(int unhappyGuests){
         this.unhappyGuests += unhappyGuests;
     }

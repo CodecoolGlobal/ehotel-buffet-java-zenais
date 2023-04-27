@@ -47,7 +47,7 @@ public class EHotelBuffetApplication {
         List<Guest> allDinnerGuests = dinnerGuestService.generateAllGuests(seasonStart, seasonEnd, ALL_DINNER_GUESTS, 1);
         StorageService storageService = new StorageService(new LinkedList<>());
         KitchenService kitchenService = new KitchenService(storageService);
-        SuccessMetrics successMetrics = new SuccessMetrics(0,0);
+        SuccessMetrics successMetrics = new SuccessMetrics(0,0, ALL_DINNER_GUESTS);
         DinnerService dinnerService = new DinnerService();
         DinnerManager dinnerManager = new DinnerManager(allDinnerGuests,
                 SEASON_START,

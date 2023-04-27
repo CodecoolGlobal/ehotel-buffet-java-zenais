@@ -1,5 +1,6 @@
 package com.codecool.ehotel.service.dinner;
 
+import com.codecool.ehotel.model.Constants;
 import com.codecool.ehotel.model.DinnerGuestType;
 import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.service.breakfastGroup.BreakfastGroupProvider;
@@ -15,6 +16,8 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.codecool.ehotel.model.Constants.*;
+
 class DinnerManagerTest {
     LocalDate seasonStart = LocalDate.parse("2023-01-01");
     LocalDate seasonEnd = LocalDate.parse("2023-02-01");
@@ -25,7 +28,7 @@ class DinnerManagerTest {
     List<Guest> allDinnerGuests = dinnerGuestService.generateAllGuests(seasonStart, seasonEnd, numberOfGuests, 1);
     DinnerService dinnerService = new DinnerService();
     KitchenService kitchenService = new KitchenService(new StorageService(new LinkedList<>()));
-    SuccessMetrics successMetrics = new SuccessMetrics(0,0);
+    SuccessMetrics successMetrics = new SuccessMetrics(0,0, ALL_DINNER_GUESTS);
     DinnerManager dinnerManager = new DinnerManager(allDinnerGuests, seasonStart, seasonEnd, breakfastGroupProvider, dinnerGuestService, dinnerService, kitchenService, successMetrics);
 
 
