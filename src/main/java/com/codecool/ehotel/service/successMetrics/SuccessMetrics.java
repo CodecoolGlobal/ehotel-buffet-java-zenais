@@ -3,9 +3,12 @@ package com.codecool.ehotel.service.successMetrics;
 public class SuccessMetrics {
     int unhappyGuests;
     int costOfWastedFood;
-    public SuccessMetrics(int unhappyGuests, int costOfWastedFood){
+
+    int totalGuests;
+    public SuccessMetrics(int unhappyGuests, int costOfWastedFood, int totalGuests){
         this.unhappyGuests = unhappyGuests;
         this.costOfWastedFood = costOfWastedFood;
+        this.totalGuests = totalGuests;
     }
     public int getNumberOfUnhappyGuests(){
         return unhappyGuests;
@@ -22,4 +25,6 @@ public class SuccessMetrics {
     public int getCostOfWastedFood(){
         return costOfWastedFood;
     }
+
+    public int getTotalGuests() { return totalGuests;}
 }

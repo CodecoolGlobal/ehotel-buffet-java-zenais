@@ -9,6 +9,7 @@ import com.codecool.ehotel.service.breakfastGroup.BreakfastGroupProvider;
 import com.codecool.ehotel.service.buffet.BuffetService;
 import com.codecool.ehotel.service.guest.GuestService;
 import com.codecool.ehotel.service.successMetrics.SuccessMetrics;
+import com.codecool.ehotel.ui.Screen;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -37,12 +38,12 @@ public class BreakfastManager {
 
     public void simulateSeason(){
         LocalDate day = seasonStart;
-        SuccessMetrics seasonSuccessMetrics = new SuccessMetrics(0,0);
+        SuccessMetrics seasonSuccessMetrics = new SuccessMetrics(0,0, allGuests.size());
         List<SuccessMetrics> dailySuccessMetricsList = new ArrayList<>();
         while (!day.isAfter(seasonEnd)){
             cycle = 1;
-            SuccessMetrics daySuccessMetrics = new SuccessMetrics(0,0);
             Set<Guest> guestsForDay = guestService.getGuestsForDay(allGuests,day);
+            SuccessMetrics daySuccessMetrics = new SuccessMetrics(0,0, guestsForDay.size());
             List<Set<Guest>> guestsCycles = breakfastGroupProvider.getBreakfastGroups(guestsForDay,8);
             Map<GuestType, Integer> numberGuestsPerType = guestService.getNumberOfGuestsPerType(guestsForDay);
             for (Set<Guest> guests: guestsCycles ) {
@@ -56,6 +57,7 @@ public class BreakfastManager {
             dailySuccessMetricsList.add(daySuccessMetrics);
             day = day.plusDays(1);
         }
+        new Screen().displayBreakfastSeason(seasonSuccessMetrics, dailySuccessMetricsList);
     }
     public void serve(Set<Guest> guestGroup, Map<GuestType, Integer> numberGuestsPerType, SuccessMetrics daySuccessMetrics){
         //TODO:
@@ -81,6 +83,7 @@ public class BreakfastManager {
     }
 
     public Map<MealType, Integer> getOptimalPortions(Buffet buffet, Map<GuestType, Integer > numberOfGuestsPerType, int cycle, int assumedCostOfUnhappyGuest){
+
         //TODO: Martin
         Map<MealType, Integer> portionsToRefill = new HashMap<>();
         for (GuestType type : numberOfGuestsPerType.keySet()) {
