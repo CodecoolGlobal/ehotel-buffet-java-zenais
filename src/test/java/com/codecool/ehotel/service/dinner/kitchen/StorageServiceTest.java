@@ -12,9 +12,9 @@ import java.util.Map;
 import static com.codecool.ehotel.model.Ingredient.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class StorageTest {
-    Storage emptyStorage = new Storage(new ArrayList<>());
-    Storage fullStorage = new Storage(List.of(
+class StorageServiceTest {
+    StorageService emptyStorageService = new StorageService(new ArrayList<>());
+    StorageService fullStorageService = new StorageService(List.of(
             new StorageItem(KETCHUP,LocalDate.now(),LocalDate.now().plusDays(5)),
             new StorageItem(KETCHUP,LocalDate.now(),LocalDate.now().plusDays(1)),
             new StorageItem(ONION,LocalDate.now(),LocalDate.now().plusDays(5))
@@ -22,59 +22,59 @@ class StorageTest {
 
     @Test
     void addOneItemTest() {
-        emptyStorage.addItem(KETCHUP, LocalDate.now());
-        List<StorageItem> storageItemsResult = emptyStorage.getStorageItems();
+        emptyStorageService.addItem(KETCHUP, LocalDate.now());
+        List<StorageItem> storageItemsResult = emptyStorageService.getStorageItems();
         List<StorageItem> expectedList = List.of(new StorageItem(KETCHUP,LocalDate.now(), LocalDate.now().plusDays(KETCHUP.getDaysToExpire())));
         Map<Ingredient, Integer> expectedCounter = Map.of(KETCHUP, 1);
-        Map<Ingredient, Integer> resultCounter = emptyStorage.getIngredientCounter();
+        Map<Ingredient, Integer> resultCounter = emptyStorageService.getIngredientCounter();
         assertEquals(expectedList, storageItemsResult);
         assertEquals(expectedCounter, resultCounter);
     }
 
     @Test
     void addMoreItemsTest() {
-        emptyStorage.addItem(KETCHUP, LocalDate.now());
-        emptyStorage.addItem(KETCHUP, LocalDate.now());
-        emptyStorage.addItem(ONION, LocalDate.now());
-        List<StorageItem> storageItemsResult = emptyStorage.getStorageItems();
+        emptyStorageService.addItem(KETCHUP, LocalDate.now());
+        emptyStorageService.addItem(KETCHUP, LocalDate.now());
+        emptyStorageService.addItem(ONION, LocalDate.now());
+        List<StorageItem> storageItemsResult = emptyStorageService.getStorageItems();
         List<StorageItem> expectedList = List.of(
                 new StorageItem(KETCHUP,LocalDate.now(), LocalDate.now().plusDays(KETCHUP.getDaysToExpire())),
                 new StorageItem(KETCHUP,LocalDate.now(), LocalDate.now().plusDays(KETCHUP.getDaysToExpire())),
                 new StorageItem(ONION,LocalDate.now(), LocalDate.now().plusDays(ONION.getDaysToExpire()))
                 );
         Map<Ingredient, Integer> expectedCounter = Map.of(KETCHUP, 2, ONION, 1);
-        Map<Ingredient, Integer> resultCounter = emptyStorage.getIngredientCounter();
+        Map<Ingredient, Integer> resultCounter = emptyStorageService.getIngredientCounter();
         assertEquals(expectedList, storageItemsResult);
         assertEquals(expectedCounter, resultCounter);
     }
 
     @Test
     void removeOneItem() {
-        fullStorage.removeItem(KETCHUP);
+        fullStorageService.removeItem(KETCHUP);
         List<StorageItem> expectedList = List.of(
                 new StorageItem(KETCHUP,LocalDate.now(),LocalDate.now().plusDays(5)),
                 new StorageItem(ONION,LocalDate.now(),LocalDate.now().plusDays(5))
         );
         Map<Ingredient, Integer> expectedCounter = Map.of(KETCHUP, 1, ONION, 1);
-        Map<Ingredient, Integer> resultCounter = fullStorage.getIngredientCounter();
-        List<StorageItem> resultList = fullStorage.getStorageItems();
+        Map<Ingredient, Integer> resultCounter = fullStorageService.getIngredientCounter();
+        List<StorageItem> resultList = fullStorageService.getStorageItems();
         assertEquals(expectedList,resultList);
         assertEquals(expectedCounter, resultCounter);
     }
 
     @Test
     void cleanStorageEmptyTest(){
-        fullStorage.cleanStorage(LocalDate.now().plusDays(100));
-        assertTrue(fullStorage.getStorageItems().isEmpty());
+        fullStorageService.cleanStorage(LocalDate.now().plusDays(100));
+        assertTrue(fullStorageService.getStorageItems().isEmpty());
     }
     @Test
     void cleanStorageTest(){
-        Storage expectedStorage = new Storage(List.of(
+        StorageService expectedStorageService = new StorageService(List.of(
                 new StorageItem(KETCHUP,LocalDate.now(),LocalDate.now().plusDays(5)),
                 new StorageItem(ONION,LocalDate.now(),LocalDate.now().plusDays(5))
         ));
-        fullStorage.cleanStorage(LocalDate.now().plusDays(2));
-        assertTrue(expectedStorage.getStorageItems().equals(fullStorage.getStorageItems()));
+        fullStorageService.cleanStorage(LocalDate.now().plusDays(2));
+        assertTrue(expectedStorageService.getStorageItems().equals(fullStorageService.getStorageItems()));
     }
 
 }
