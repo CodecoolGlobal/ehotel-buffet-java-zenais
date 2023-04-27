@@ -25,7 +25,7 @@ public class KitchenService {
                 orders.replace(order.getKey(), order.getValue(), Dinner.NO_DINNER);
             }
         }
-        return orderQuality / orders.size();
+        return (orderQuality / orders.size())*100;
     }
 
     private double getDinnerQuality(List<StorageItem> dinnerIngredients, LocalDate date) {
@@ -103,5 +103,13 @@ public class KitchenService {
                 ingredientsEstimate.put(ingredient, quotients[preferenceIndex]);
             }
         }
+    }
+
+    public int calculateDailyCost(Map<Guest, Dinner> orders) {
+        int sumCost = 0;
+        for (Dinner dinner: orders.values()) {
+            sumCost += dinner.getCost();
+        }
+        return sumCost;
     }
 }
