@@ -1,22 +1,23 @@
 package com.codecool.ehotel.model;
 
 import java.util.List;
+import java.util.Map;
 
-import static com.codecool.ehotel.model.Menu.*;
+import static com.codecool.ehotel.model.Dinner.*;
 
 public enum DinnerGuestType {
 
     BUSINESS(List.of(Avocado_burger, Veggie_Soup, Big_salat)),
     TOURIST(List.of(Simple_burger, Pommes, Veggie_burger)),
-    KID(List.of(Minestrone_Soup, Spiderman_Spagetti, Pommes));
+    KID(List.of(Spiderman_Spagetti, Pommes, Minestrone_Soup));
 
-    private List<Menu> mealPreferences;
+    private final List<Dinner> mealPreferences;
 
-    DinnerGuestType(List<Menu> mealPreferences) {
+    DinnerGuestType(List<Dinner> mealPreferences) {
         this.mealPreferences = mealPreferences;
     }
 
-    public List<Menu> getMealPreferences() {
+    public List<Dinner> getMealPreferences() {
         return mealPreferences;
     }
 }
