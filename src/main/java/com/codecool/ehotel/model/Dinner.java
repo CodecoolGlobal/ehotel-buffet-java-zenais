@@ -13,7 +13,8 @@ public enum Dinner {
     Minestrone_Soup(Set.of(COOKED_VEGETABLE, SLICED_TOMATO, NOODLES), 0.06, 5),
     Spiderman_Spagetti(Set.of(SPAGHETTI, TOMATO_SOUCE, MINCED_MEAT), 0.13, 7),
     Pommes(Set.of(POTATO, KETCHUP), 0.13, 3),
-    Big_salat(Set.of(LETTUCE, ONION, AVOCADO, EGG, MAYONNAISE), 0.06, 8);
+    Big_salat(Set.of(LETTUCE, ONION, AVOCADO, EGG, MAYONNAISE), 0.06, 8),
+    NO_DINNER(Set.of(), 0, 0);
 
     private Set<Ingredient> ingredients;
     private double popularity;
