@@ -1,48 +1,58 @@
 package com.codecool.ehotel.service.dinner.kitchen;
 
-import com.codecool.ehotel.model.DinnerGuestType;
-import com.codecool.ehotel.model.Guest;
-import com.codecool.ehotel.model.Dinner;
-import com.codecool.ehotel.model.Ingredient;
+import com.codecool.ehotel.model.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.Period;
+import java.util.*;
 
 public class KitchenService {
-    private Storage storage;
+    private StorageService storageService;
 
-    public KitchenService(Storage storage) {
-        this.storage = storage;
+    public KitchenService(StorageService storageService) {
+        this.storageService = storageService;
     }
 
-    public double serveOrders(Map<Guest, Dinner> orders) {
+    public double prepareAvailableOrders(Map<Guest, Dinner> orders, LocalDate date) {
         //TODO: test
         double orderQuality = 0;
         for (Map.Entry<Guest, Dinner> order : orders.entrySet()) {
             Dinner dinner = order.getValue();
             if (isMealAvailable(dinner)) {
-                orderQuality += 1;
-                removeDinnerIngredients(dinner);
+                List<StorageItem> dinnerIngredients = removeDinnerIngredients(dinner);
+                orderQuality += getDinnerQuality(dinnerIngredients, date);
+            } else {
+                orders.replace(order.getKey(), order.getValue(), Dinner.NO_DINNER);
             }
         }
         return orderQuality / orders.size();
     }
 
-
-    private void removeDinnerIngredients(Dinner dinner) {
-        //TODO: test
-        for (Ingredient ingredient : dinner.getIngredients()) {
-            storage.removeItem(ingredient);
+    private double getDinnerQuality(List<StorageItem> dinnerIngredients, LocalDate date) {
+        //TODO: Test
+        double freshnessSum = 0.0;
+        for (StorageItem storageItem : dinnerIngredients) {
+            double daysBetween = Period.between(storageItem.purchaseDate(), date).getDays();
+            double ingredientFreshness = 1.0 - (daysBetween / storageItem.ingredient().getDaysToExpire());
+            freshnessSum += ingredientFreshness;
         }
+        return freshnessSum / dinnerIngredients.size();
+    }
+
+
+    private List<StorageItem> removeDinnerIngredients(Dinner dinner) {
+        //TODO: test
+        List<StorageItem> removedIngredients = new LinkedList<>();
+        for (Ingredient ingredient : dinner.getIngredients()) {
+            removedIngredients.add(storageService.removeItem(ingredient));
+        }
+        return removedIngredients;
     }
 
     private boolean isMealAvailable(Dinner dinner) {
         //TODO: test
         for (Ingredient ingredient : dinner.getIngredients()) {
-            if (!storage.hasIngredient(ingredient)) {
+            if (!storageService.hasIngredient(ingredient)) {
                 return false;
             }
         }
@@ -51,33 +61,47 @@ public class KitchenService {
 
     public void supplyKitchen(Set<Guest> guests, LocalDate date) {
         //TODO: test
-        List<Ingredient> guestIngredients = getOptimalIngredients(guests);
-        for (Ingredient ingredient : guestIngredients) {
-            storage.addItem(ingredient, date);
+        Map<Ingredient, Integer> guestIngredients = getOptimalQuantityOfIngredients(guests);
+        for (Map.Entry<Ingredient, Integer> ingredient : guestIngredients.entrySet()) {
+            for (int i = 0; i < ingredient.getValue(); i++) {
+                storageService.addItem(ingredient.getKey(), date);
+            }
         }
     }
 
-    public Storage getStorage() {
-        return storage;
+    public StorageService getStorage() {
+        return storageService;
     }
 
-    private List<Ingredient> getOptimalIngredients(Set<Guest> guestSet) {
-        double firstPercentage = 0.5;
-        double secondPercentage = 0.3;
-        double thirdPercentage = 0.2;
+    private Map<Ingredient, Integer> getOptimalQuantityOfIngredients(Set<Guest> guestSet) {
+        //TODO: refactor and test
+        int[] quotients = {5, 3, 2};
+        int sum = 10;
 
-        Map<DinnerGuestType, Integer> guestTypeQuantity = new HashMap<>();
+        Map<Ingredient, Integer> ingredientsEstimate = new HashMap<>();
         for (Guest guest : guestSet) {
             DinnerGuestType guestType = DinnerGuestType.valueOf(guest.guestType().toString());
-            if (guestTypeQuantity.containsKey(guestType)) {
-                Integer quantity = guestTypeQuantity.get(guestType);
-                guestTypeQuantity.replace(guestType, quantity, quantity + 1);
-            } else {
-                guestTypeQuantity.put(guestType, 1);
+            for (int index = 0; index < 3; index++) {
+                updateIngredientsEstimate(ingredientsEstimate, guestType, index, quotients);
             }
         }
 
-        //TODO:
-        return null;
+        for (Map.Entry<Ingredient, Integer> ingredient : ingredientsEstimate.entrySet()             ) {
+            ingredientsEstimate.replace(ingredient.getKey(), ingredient.getValue(), ingredient.getValue() / sum);
+        }
+
+        return ingredientsEstimate;
+    }
+
+    private static void updateIngredientsEstimate(Map<Ingredient, Integer> ingredientsEstimate, DinnerGuestType guestType, int preferenceIndex, int[] quotients) {
+       //TODO: test
+        for (Ingredient ingredient : guestType.getMealPreferences().get(preferenceIndex).getIngredients()) {
+            if (ingredientsEstimate.containsKey(ingredient)) {
+                int quantity = ingredientsEstimate.get(ingredient);
+                ingredientsEstimate.replace(ingredient, quantity, quantity + quotients[preferenceIndex]);
+            } else {
+                ingredientsEstimate.put(ingredient, quotients[preferenceIndex]);
+            }
+        }
     }
 }
