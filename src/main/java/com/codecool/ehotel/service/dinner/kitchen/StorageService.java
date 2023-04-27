@@ -21,26 +21,25 @@ public class StorageService {
     private Map<Ingredient, Integer> countIngredients(List<StorageItem> storageItems) {
         Map<Ingredient, Integer> ingredientCounter = new HashMap<>();
         for (StorageItem storageItem : storageItems) {
-            if (ingredientCounter.containsKey(storageItem.ingredient())) {
-                Integer quantity = ingredientCounter.get(storageItem.ingredient());
-                ingredientCounter.replace(storageItem.ingredient(), quantity, quantity + 1);
-            } else {
-                ingredientCounter.put(storageItem.ingredient(), 1);
-            }
+            incrementIngredient(ingredientCounter, storageItem.ingredient());
         }
         return ingredientCounter;
+    }
+
+    private static void incrementIngredient(Map<Ingredient, Integer> ingredientCounter, Ingredient storageItem) {
+        if (ingredientCounter.containsKey(storageItem)) {
+            Integer quantity = ingredientCounter.get(storageItem);
+            ingredientCounter.replace(storageItem, quantity, quantity + 1);
+        } else {
+            ingredientCounter.put(storageItem, 1);
+        }
     }
 
     public void addItem(Ingredient ingredient, LocalDate date) {
         LocalDate expiryDate = date.plusDays(ingredient.getDaysToExpire());
         StorageItem storageItem = new StorageItem(ingredient, date, expiryDate);
         storageItems.add(storageItem);
-        if (ingredientCounter.containsKey(ingredient)) {
-            Integer quantity = ingredientCounter.get(ingredient);
-            ingredientCounter.replace(ingredient, quantity, quantity + 1);
-        } else {
-            ingredientCounter.put(ingredient, 1);
-        }
+        incrementIngredient(ingredientCounter, ingredient);
     }
 
     public StorageItem removeItem(Ingredient ingredient) {
@@ -48,7 +47,6 @@ public class StorageService {
             for (int storageIndex = storageItems.size() - 1; storageIndex >= 0; storageIndex--) {
                 StorageItem storageItem = storageItems.get(storageIndex);
                 Integer quantity = ingredientCounter.get(ingredient);
-
                 if (storageItem.ingredient().equals(ingredient)) {
                     ingredientCounter.replace(ingredient, quantity, quantity - 1);
                     storageItems.remove(storageItem);

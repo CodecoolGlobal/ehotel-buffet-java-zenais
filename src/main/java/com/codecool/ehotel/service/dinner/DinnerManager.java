@@ -53,12 +53,30 @@ public class DinnerManager {
     }
 
     private void simulateDinnerOnGivenDate(LocalDate date) {
-        Set<Guest> guests = guestService.getGuestsForDay(allDinnerGuests, date);
-        kitchenService.supplyKitchen(guests, date);
-        Map<Guest, Dinner> orders = dinnerService.createOrdersFromPreferences(guests);
-        int guestSatisfaction = (int)Math.round(kitchenService.prepareAvailableOrders(orders, date));
+        Set<Guest> guests = getGuestsForDay(date);
+        shopForIngredients(date, guests);
+        Map<Guest, Dinner> orders = getCustomerOrders(guests);
+        prepareFood(date, guests, orders);
+    }
+
+    private void prepareFood(LocalDate date, Set<Guest> guests, Map<Guest, Dinner> orders) {
+        int guestSatisfaction = (int)Math.round(kitchenService.assessOrderQuality(orders, date));
         int dailyCosts = kitchenService.calculateDailyCost(orders);
         int costOfWaste = kitchenService.getStorage().cleanStorage(date);
-        successMetrics.addStatistics(date,guestSatisfaction,guests.size(),costOfWaste,dailyCosts,allDinnerGuests.size());
+        successMetrics.addStatistics(date,guestSatisfaction, guests.size(),costOfWaste,dailyCosts,allDinnerGuests.size());
+    }
+
+    private Map<Guest, Dinner> getCustomerOrders(Set<Guest> guests) {
+        Map<Guest, Dinner> orders = dinnerService.createOrdersFromPreferences(guests);
+        return orders;
+    }
+
+    private void shopForIngredients(LocalDate date, Set<Guest> guests) {
+        kitchenService.restockKitchen(guests, date);
+    }
+
+    private Set<Guest> getGuestsForDay(LocalDate date) {
+        Set<Guest> guests = guestService.getGuestsForDay(allDinnerGuests, date);
+        return guests;
     }
 }

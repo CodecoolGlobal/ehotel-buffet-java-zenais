@@ -57,6 +57,6 @@ public class SuccessMetrics {
     public double getCostWasteRatio() {
         double WasteTotal = statistics.stream().map(MealServiceStatistics::costOfWaste).reduce(0, Integer::sum);
         double CostTotalAll = statistics.stream().map(MealServiceStatistics::costTotal).reduce(0, Integer::sum);
-        return WasteTotal/CostTotalAll;
+        return (WasteTotal/CostTotalAll) * 100;
     }
 }
