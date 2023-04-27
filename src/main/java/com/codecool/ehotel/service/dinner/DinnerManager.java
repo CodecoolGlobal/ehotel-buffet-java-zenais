@@ -3,6 +3,7 @@ package com.codecool.ehotel.service.dinner;
 import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.model.Dinner;
 import com.codecool.ehotel.service.breakfastGroup.BreakfastGroupProvider;
+import com.codecool.ehotel.service.dinner.kitchen.DinnerService;
 import com.codecool.ehotel.service.dinner.kitchen.KitchenService;
 import com.codecool.ehotel.service.guest.GuestService;
 import com.codecool.ehotel.service.successMetrics.SuccessMetrics;
@@ -54,9 +55,8 @@ public class DinnerManager {
     private void simulateDinnerOnGivenDate(LocalDate date) {
         Set<Guest> guests = guestService.getGuestsForDay(allDinnerGuests, date);
         kitchenService.supplyKitchen(guests, date);
-        Map<Guest, Dinner> orders = dinnerService.getOrders(guests);
-        double orderFulfilledQuotient =  kitchenService.serveOrders(orders);
-        int guestSatisfaction = dinnerService.consume(orders);
+        Map<Guest, Dinner> orders = dinnerService.createOrdersFromPreferences(guests);
+        int guestSatisfaction = (int) kitchenService.prepareAvailableOrders(orders, date);
         int costOfWaste = kitchenService.getStorage().cleanStorage(date);
         calculateSuccessMetrics(guestSatisfaction, costOfWaste);
     }
