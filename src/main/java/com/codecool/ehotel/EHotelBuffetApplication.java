@@ -53,6 +53,6 @@ public class EHotelBuffetApplication {
         DinnerService dinnerService = new DinnerService();
         DinnerManager dinnerManager = new DinnerManager(allDinnerGuests, SEASON_START, SEASON_END, breakfastGroupProvider, dinnerGuestService, dinnerService, kitchenService, successMetrics);
         dinnerManager.simulateSeason();
-        screen.printGuestStatistics(successMetrics.getStatistics(), successMetrics.getAverageSatisfaction(), successMetrics.getCostWasteRatio() );
+        screen.printGuestStatistics("DINNER STATISTICS: ",successMetrics.getStatistics(), successMetrics.getAverageSatisfaction(), successMetrics.getCostWasteRatio() );
     }
 }
