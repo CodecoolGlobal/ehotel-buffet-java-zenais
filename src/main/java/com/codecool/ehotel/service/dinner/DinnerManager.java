@@ -56,13 +56,9 @@ public class DinnerManager {
         Set<Guest> guests = guestService.getGuestsForDay(allDinnerGuests, date);
         kitchenService.supplyKitchen(guests, date);
         Map<Guest, Dinner> orders = dinnerService.createOrdersFromPreferences(guests);
-        int guestSatisfaction = (int) kitchenService.prepareAvailableOrders(orders, date);
+        int guestSatisfaction = (int)Math.round(kitchenService.prepareAvailableOrders(orders, date));
+        int dailyCosts = kitchenService.calculateDailyCost(orders);
         int costOfWaste = kitchenService.getStorage().cleanStorage(date);
-        calculateSuccessMetrics(guestSatisfaction, costOfWaste);
-    }
-
-    private void calculateSuccessMetrics(int guestSatisfaction, int costOfWaste) {
-        successMetrics.addUnhappyGuests(guestSatisfaction);
-        successMetrics.addCostOfWastedFood(costOfWaste);
+        successMetrics.addStatistics(date,guestSatisfaction,guests.size(),costOfWaste,dailyCosts,allDinnerGuests.size());
     }
 }
