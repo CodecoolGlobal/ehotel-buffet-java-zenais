@@ -41,6 +41,13 @@ class GuestServiceImplTest {
         }
         assertEquals(numberOfGuestsExpected, allGuestExpected.size());
     }
+    @Test
+    void getGuestsOneForDayTest() {
+        List<Guest> allGuests = guestService.generateAllGuests(seasonStart, seasonStart, 10, 1);
+        LocalDate date = seasonStart;
+        Set<Guest> allGuestResult = guestService.getGuestsForDay(allGuests,date);
+        assertEquals(allGuests.size(), allGuestResult.size());
+    }
 
     @Test
     void getNumberOfGuestsPerType() {
