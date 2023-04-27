@@ -3,13 +3,13 @@ package com.codecool.ehotel.service.guest;
 import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.model.GuestType;
 import com.codecool.ehotel.service.date.DateService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+//import static com.sun.org.apache.xerces.internal.util.PropertyState.is;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GuestServiceImplTest {
@@ -40,5 +40,26 @@ class GuestServiceImplTest {
             date = date.plusDays(1);
         }
         assertEquals(numberOfGuestsExpected, allGuestExpected.size());
+    }
+
+    @Test
+    void getNumberOfGuestsPerType() {
+        Set<Guest> testSet = new HashSet<>();
+        LocalDate date = LocalDate.now();
+        testSet.add(new Guest<>("John", GuestType.BUSINESS, date, date));
+        testSet.add(new Guest<>("Sepp", GuestType.BUSINESS, date, date));
+        testSet.add(new Guest<>("Hans", GuestType.BUSINESS, date, date));
+        testSet.add(new Guest<>("Susi", GuestType.KID, date, date));
+        testSet.add(new Guest<>("Mitzi", GuestType.KID, date, date));
+        testSet.add(new Guest<>("blabla", GuestType.TOURIST, date, date));
+        testSet.add(new Guest<>("test", GuestType.TOURIST, date, date));
+        testSet.add(new Guest<>("Sam", GuestType.TOURIST, date, date));
+        testSet.add(new Guest<>("Joey", GuestType.TOURIST, date, date));
+        Map<GuestType, Integer> result = guestService.getNumberOfGuestsPerType(testSet);
+        Map<GuestType, Integer> expected = new HashMap<>();
+        expected.put(GuestType.BUSINESS, 3);
+        expected.put(GuestType.KID, 2);
+        expected.put(GuestType.TOURIST, 4);
+        assertTrue(result.equals(expected));
     }
 }
