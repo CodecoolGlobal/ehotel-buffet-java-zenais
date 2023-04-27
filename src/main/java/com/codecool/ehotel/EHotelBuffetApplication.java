@@ -1,8 +1,6 @@
 package com.codecool.ehotel;
 
-import com.codecool.ehotel.model.Buffet;
-import com.codecool.ehotel.model.DinnerGuestType;
-import com.codecool.ehotel.model.GuestType;
+import com.codecool.ehotel.model.*;
 import com.codecool.ehotel.service.buffet.BuffetService;
 import com.codecool.ehotel.service.buffet.BuffetServiceImpl;
 
@@ -10,7 +8,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.service.breakfast.BreakfastManager;
 import com.codecool.ehotel.service.breakfastGroup.BreakfastGroupProvider;
 import com.codecool.ehotel.service.date.DateService;
@@ -22,6 +19,8 @@ import com.codecool.ehotel.service.guest.GuestServiceImpl;
 import com.codecool.ehotel.service.successMetrics.SuccessMetrics;
 
 import java.time.LocalDate;
+
+import static com.codecool.ehotel.model.Constants.*;
 
 public class EHotelBuffetApplication {
 
@@ -45,13 +44,19 @@ public class EHotelBuffetApplication {
         breakfastManager.simulateSeason();
         // Run dinner service
         GuestServiceImpl<DinnerGuestType> dinnerGuestService = new GuestServiceImpl<DinnerGuestType>(dateService, DinnerGuestType.values());
-        List<Guest> allDinnerGuests = dinnerGuestService.generateAllGuests(seasonStart, seasonEnd, numberOfGuests, 1);
+        List<Guest> allDinnerGuests = dinnerGuestService.generateAllGuests(seasonStart, seasonEnd, ALL_DINNER_GUESTS, 1);
         StorageService storageService = new StorageService(new LinkedList<>());
         KitchenService kitchenService = new KitchenService(storageService);
         SuccessMetrics successMetrics = new SuccessMetrics(0,0);
         DinnerService dinnerService = new DinnerService();
-        DinnerManager dinnerManager = new DinnerManager(allDinnerGuests, seasonStart, seasonEnd, breakfastGroupProvider, dinnerGuestService, dinnerService, kitchenService, successMetrics);
+        DinnerManager dinnerManager = new DinnerManager(allDinnerGuests,
+                SEASON_START,
+                SEASON_END,
+                breakfastGroupProvider,
+                dinnerGuestService,
+                dinnerService,
+                kitchenService,
+                successMetrics);
         dinnerManager.simulateSeason();
-
     }
 }
