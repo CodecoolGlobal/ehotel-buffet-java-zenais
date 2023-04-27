@@ -17,6 +17,7 @@ import com.codecool.ehotel.service.dinner.kitchen.KitchenService;
 import com.codecool.ehotel.service.dinner.kitchen.StorageService;
 import com.codecool.ehotel.service.guest.GuestServiceImpl;
 import com.codecool.ehotel.service.successMetrics.SuccessMetrics;
+import com.codecool.ehotel.ui.Screen;
 
 import java.time.LocalDate;
 
@@ -29,6 +30,7 @@ public class EHotelBuffetApplication {
         int maxStay = 7;
         LocalDate seasonStart = LocalDate.parse("2023-01-01");
         LocalDate seasonEnd = LocalDate.parse("2023-02-01");
+        Screen screen = new Screen();
 
         // Initialize services
         Buffet buffet = new Buffet(new ArrayList<>());
@@ -44,19 +46,13 @@ public class EHotelBuffetApplication {
         breakfastManager.simulateSeason();
         // Run dinner service
         GuestServiceImpl<DinnerGuestType> dinnerGuestService = new GuestServiceImpl<DinnerGuestType>(dateService, DinnerGuestType.values());
-        List<Guest> allDinnerGuests = dinnerGuestService.generateAllGuests(seasonStart, seasonEnd, ALL_DINNER_GUESTS, 1);
+        List<Guest> allDinnerGuests = dinnerGuestService.generateAllGuests(SEASON_START, SEASON_END, ALL_DINNER_GUESTS,MAX_STAY_DAYS );
         StorageService storageService = new StorageService(new LinkedList<>());
         KitchenService kitchenService = new KitchenService(storageService);
-        SuccessMetrics successMetrics = new SuccessMetrics(0,0, ALL_DINNER_GUESTS);
+        SuccessMetrics successMetrics = new SuccessMetrics();
         DinnerService dinnerService = new DinnerService();
-        DinnerManager dinnerManager = new DinnerManager(allDinnerGuests,
-                SEASON_START,
-                SEASON_END,
-                breakfastGroupProvider,
-                dinnerGuestService,
-                dinnerService,
-                kitchenService,
-                successMetrics);
+        DinnerManager dinnerManager = new DinnerManager(allDinnerGuests, SEASON_START, SEASON_END, breakfastGroupProvider, dinnerGuestService, dinnerService, kitchenService, successMetrics);
         dinnerManager.simulateSeason();
+        screen.printGuestStatistics(successMetrics.getStatistics(), successMetrics.getAverageSatisfaction(), successMetrics.getCostWasteRatio() );
     }
 }
