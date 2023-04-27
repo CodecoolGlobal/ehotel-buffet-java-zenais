@@ -34,6 +34,7 @@ public class GuestServiceImpl<T extends Enum<T>> implements GuestService {
     public Set<Guest> getGuestsForDay(List<Guest> guests, LocalDate date) {
         Set<Guest> guestsForDay = new HashSet<>();
         //TODO: Create Tests
+
         for (Guest guest : guests) {
             if (dateService.isBetweenInclusive(guest.checkIn(),guest.checkOut(),date)){
                 guestsForDay.add(guest);
