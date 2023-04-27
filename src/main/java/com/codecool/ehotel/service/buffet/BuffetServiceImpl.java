@@ -20,11 +20,11 @@ public class BuffetServiceImpl implements BuffetService {
     }
 
     @Override
-    public void refill(Map<MealType, Integer> portions) {
+    public void refill(Map<MealType, Integer> portions, int cycle) {
         if (portions.isEmpty()) return;
         for (Map.Entry<MealType, Integer> portion : portions.entrySet()) {
             for (int i = 1; i <= portion.getValue(); i++) {
-                mealsOnDisplay.add(new MealPortion(portion.getKey(), 1));
+                mealsOnDisplay.add(new MealPortion(portion.getKey(), cycle));
             }
         }
         //TODO: Martin/done?
@@ -43,24 +43,28 @@ public class BuffetServiceImpl implements BuffetService {
     }
 
     @Override
-    public int collectWaste(MealDurability mealDurability, int buffetCycle) {
+    public int collectWaste(int buffetCycle) {
         int costOfThrownAwayMeals = 0;
-        if (buffetCycle == 6) { //we don't know if there are 6 cycles
-            for (MealPortion portion : mealsOnDisplay) {//the same loop repeats twice, once is more than enough
-                if (portion.meal().getDurability() == MealDurability.SHORT || portion.meal().getDurability() == MealDurability.MEDIUM) { //too complicated Logic, please refactor
-                    costOfThrownAwayMeals += portion.meal().getCost();
-                    mealsOnDisplay.remove(portion);
+
+            for (int i = 0; i < mealsOnDisplay.size(); i++) {
+                if (mealsOnDisplay.get(i).meal().getDurability() == MealDurability.SHORT && buffetCycle - mealsOnDisplay.get(i).servedAtCycle() > 2) {
+                    costOfThrownAwayMeals += mealsOnDisplay.get(i).meal().getCost();
+                    mealsOnDisplay.remove(i);
+                    i--;
                 }
             }
-        } else if (buffetCycle >= 4 && buffetCycle < 6) {//refactoring needed, irrelevant if the the buffetCycle is last
-            for (MealPortion portion : mealsOnDisplay) {
-                if (portion.meal().getDurability() == MealDurability.SHORT && buffetCycle - portion.servedAtCycle() == 3) {//please SLAP this
-                    costOfThrownAwayMeals += portion.meal().getCost(); //method repeates twice, rethink order
-                    mealsOnDisplay.remove(portion);
-                }
+        //TODO: Martin
+        return costOfThrownAwayMeals;
+    }
+    public int closeBuffet() {
+    int costOfThrownAwayMeals = 0;
+        for (int i = 0; i < mealsOnDisplay.size(); i++) {
+            if (mealsOnDisplay.get(i).meal().getDurability() != MealDurability.LONG) {
+                costOfThrownAwayMeals += mealsOnDisplay.get(i).meal().getCost();
+                mealsOnDisplay.remove(i);
+                i--;
             }
         }
-        //TODO: Martin please write Tests
         return costOfThrownAwayMeals;
     }
 }

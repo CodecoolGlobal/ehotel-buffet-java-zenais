@@ -1,6 +1,8 @@
 package com.codecool.ehotel.service.guest;
 
 import com.codecool.ehotel.model.Guest;
+import com.codecool.ehotel.model.GuestType;
+import com.codecool.ehotel.model.MealType;
 import com.codecool.ehotel.service.date.DateService;
 
 import java.time.LocalDate;
@@ -50,4 +52,25 @@ public class GuestServiceImpl<T extends Enum<T>> implements GuestService {
         return new Guest<T>(name, guestType, checkIn, checkOut);
     }
 
+    @Override
+    public Map<GuestType, Integer> getNumberOfGuestsPerType(Set<Guest> guestsForDay) {
+        Map<GuestType, Integer> numberPerType = new HashMap<>();
+        for (Guest guest : guestsForDay) {
+            if (!numberPerType.containsKey(guest.guestType())) {
+                numberPerType.put((GuestType) guest.guestType(), 1);
+            } else {
+                numberPerType.put((GuestType) guest.guestType(), numberPerType.get(guest.guestType()) + 1);
+            }
+        }
+        return numberPerType;
+    }
+
+    @Override
+    public void removeGuestFromTypeMap(Guest guest, Map<GuestType, Integer> numberGuestsPerType) {
+        if (numberGuestsPerType.get(guest.guestType()) == 1) {
+            numberGuestsPerType.remove(guest.guestType());
+        } else {
+            numberGuestsPerType.put((GuestType) guest.guestType(), numberGuestsPerType.get(guest.guestType()) - 1);
+        }
+    }
 }
