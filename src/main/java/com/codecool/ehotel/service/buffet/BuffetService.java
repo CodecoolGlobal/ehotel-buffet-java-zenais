@@ -13,4 +13,5 @@ public interface BuffetService {
     public boolean consumeFreshest(MealType mealType);
     public int collectWaste(int buffetCycle);
     public int closeBuffet();
-}
+    public Map<MealType, Integer> getMapOfBuffet(Buffet buffet);
+    }

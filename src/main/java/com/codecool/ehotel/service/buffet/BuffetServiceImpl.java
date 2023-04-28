@@ -6,6 +6,7 @@ import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,5 +67,17 @@ public class BuffetServiceImpl implements BuffetService {
             }
         }
         return costOfThrownAwayMeals;
+    }
+    public Map<MealType, Integer> getMapOfBuffet(Buffet buffet) {
+        Map<MealType, Integer> buffetMap = new HashMap<>();
+        for (MealPortion portion : buffet.mealsOnDisplay()) {
+            if (!buffetMap.containsKey(portion.meal())) {
+                buffetMap.put(portion.meal(), 1);
+            } else {
+                buffetMap.put(portion.meal(), buffetMap.get(portion.meal()) + 1);
+            }
+        }
+        System.out.println(buffetMap);
+        return buffetMap;
     }
 }

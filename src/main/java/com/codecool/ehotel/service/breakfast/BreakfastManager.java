@@ -83,13 +83,15 @@ public class BreakfastManager {
     }
 
     public Map<MealType, Integer> getOptimalPortions(Buffet buffet, Map<GuestType, Integer > numberOfGuestsPerType, int cycle, int assumedCostOfUnhappyGuest){
-
-        //TODO: Martin
+        Map<MealType, Integer> buffetMap = buffetService.getMapOfBuffet(buffet);
+        int[] percentageForCycles = {40, 40, 40, 40, 40, 100, 0, 0};
         Map<MealType, Integer> portionsToRefill = new HashMap<>();
+
         for (GuestType type : numberOfGuestsPerType.keySet()) {
             Integer numberOfTypeGuests = numberOfGuestsPerType.get(type);
+            int mealsToPrep = (int) Math.ceil((double) numberOfTypeGuests /100 * percentageForCycles[cycle - 1]);
             List<MealType> mealTypes = type.getMealPreferences();
-            for (int i = 0; i < numberOfTypeGuests; i++) {
+            for (int i = 0; i < mealsToPrep; i++) {
                 MealType mealToAdd = mealTypes.get(random.nextInt(mealTypes.size()));
                 if (!portionsToRefill.containsKey(mealToAdd)) {
                     portionsToRefill.put((MealType) mealToAdd, 1);
@@ -110,4 +112,6 @@ public class BreakfastManager {
         }
         return portionsToRefill;
     }
+
+
 }
