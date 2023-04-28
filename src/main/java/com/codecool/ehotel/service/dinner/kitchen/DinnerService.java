@@ -1,12 +1,17 @@
 package com.codecool.ehotel.service.dinner.kitchen;
 
+import com.codecool.ehotel.model.Dinner;
 import com.codecool.ehotel.model.DinnerGuestType;
 import com.codecool.ehotel.model.Guest;
-import com.codecool.ehotel.model.Dinner;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class DinnerService {
+    private  Map<Double, Integer> preferences;
+    
     public Map<Guest, Dinner> createOrdersFromPreferences(Set<Guest> guests) {
         Map<Guest, Dinner> orders = new HashMap<>();
         for (Guest guest : guests) {
@@ -15,16 +20,15 @@ public class DinnerService {
         return orders;
     }
 
-    public static void pickOrderFromPreferences(Map<Guest, Dinner> orders, Guest guest) {
+    private void pickOrderFromPreferences(Map<Guest, Dinner> orders, Guest guest) {
         List<Dinner> dinnerPreferences = DinnerGuestType.valueOf(guest.guestType().toString()).getMealPreferences();
         double randomMeal = Math.random();
-        if (randomMeal < 0.5) {
-            orders.put(guest, dinnerPreferences.get(0));
-        } else if (randomMeal < 0.85) {
-            orders.put(guest, dinnerPreferences.get(1));
-        } else {
-            orders.put(guest, dinnerPreferences.get(2));
-        }
+        Integer index = preferences.entrySet().stream()
+                .filter(e -> e.getKey() < randomMeal)
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElseThrow();
+        orders.put(guest, dinnerPreferences.get(index));
     }
 
 

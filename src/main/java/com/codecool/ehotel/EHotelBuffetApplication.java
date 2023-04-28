@@ -20,6 +20,7 @@ import com.codecool.ehotel.service.successMetrics.SuccessMetrics;
 import com.codecool.ehotel.ui.Screen;
 
 import java.time.LocalDate;
+import java.util.Random;
 
 import static com.codecool.ehotel.model.Constants.*;
 
@@ -41,7 +42,8 @@ public class EHotelBuffetApplication {
 
         // Generate guests for the season
         List<Guest> allGuests = guestService.generateAllGuests(seasonStart, seasonEnd, numberOfGuests, maxStay);
-        BreakfastManager breakfastManager = new BreakfastManager(buffet, guestService, buffetService, breakfastGroupProvider, allGuests, seasonStart, seasonEnd);
+        Random random = new Random();
+        BreakfastManager breakfastManager = new BreakfastManager(buffet, guestService, buffetService, breakfastGroupProvider, allGuests, seasonStart, seasonEnd, random, screen);
         // Run breakfast buffet
         breakfastManager.simulateSeason();
         // Run dinner service

@@ -26,7 +26,7 @@ public class StorageService {
         return ingredientCounter;
     }
 
-    private static void incrementIngredient(Map<Ingredient, Integer> ingredientCounter, Ingredient storageItem) {
+    private void incrementIngredient(Map<Ingredient, Integer> ingredientCounter, Ingredient storageItem) {
         if (ingredientCounter.containsKey(storageItem)) {
             Integer quantity = ingredientCounter.get(storageItem);
             ingredientCounter.replace(storageItem, quantity, quantity + 1);
@@ -58,13 +58,8 @@ public class StorageService {
     }
 
     public boolean hasIngredient(Ingredient ingredient) {
-        if (!ingredientCounter.containsKey(ingredient)) {
-            return false;
-        }
-        if (ingredientCounter.get(ingredient) <= 0) {
-            return false;
-        }
-        return true;
+        return ingredientCounter.containsKey(ingredient) &&
+                ingredientCounter.get(ingredient) > 0;
     }
 
     public int cleanStorage(LocalDate date) {

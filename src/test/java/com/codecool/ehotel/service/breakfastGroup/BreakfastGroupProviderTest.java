@@ -2,6 +2,7 @@ package com.codecool.ehotel.service.breakfastGroup;
 
 import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.model.GuestType;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -16,12 +17,12 @@ class BreakfastGroupProviderTest {
     int numberOfGroups = 15;
     Set<Guest> expectedAllGuests = generateGuests(numberOfGuests);
     List<Set<Guest>> guestGroups = breakfastGroupProvider.getBreakfastGroups(expectedAllGuests, numberOfGroups);
-    @org.junit.jupiter.api.Test
+    @Test
     void testIfAllGuestsIncluded() {
         int sum = guestGroups.stream().mapToInt(guestSet->guestSet.size()).reduce(0,(acc,el)->acc+el);
         assertEquals(numberOfGuests,sum);
     }
-    @org.junit.jupiter.api.Test
+    @Test
     void testIfNoGuestRepeated() {
         Set<Guest> resultAllGuests = new HashSet<>();
         guestGroups.forEach(set->resultAllGuests.addAll(set));

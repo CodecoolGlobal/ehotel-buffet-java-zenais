@@ -5,15 +5,14 @@ import com.codecool.ehotel.model.Buffet;
 import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BuffetServiceImpl implements BuffetService {
 
-    Buffet buffet;
-    List<MealPortion> mealsOnDisplay;
+    private Buffet buffet;
+    private List<MealPortion> mealsOnDisplay;
 
     public BuffetServiceImpl(Buffet buffet) {
         this.buffet = buffet;
@@ -46,19 +45,23 @@ public class BuffetServiceImpl implements BuffetService {
     @Override
     public int collectWaste(int buffetCycle) {
         int costOfThrownAwayMeals = 0;
-
-            for (int i = 0; i < mealsOnDisplay.size(); i++) {
-                if (mealsOnDisplay.get(i).meal().getDurability() == MealDurability.SHORT && buffetCycle - mealsOnDisplay.get(i).servedAtCycle() > 2) {
-                    costOfThrownAwayMeals += mealsOnDisplay.get(i).meal().getCost();
-                    mealsOnDisplay.remove(i);
-                    i--;
-                }
+        for (int i = 0; i < mealsOnDisplay.size(); i++) {
+            if (isMealWasteful(buffetCycle, i)) {
+                costOfThrownAwayMeals += mealsOnDisplay.get(i).meal().getCost();
+                mealsOnDisplay.remove(i);
+                i--;
             }
+        }
         //TODO: Martin
         return costOfThrownAwayMeals;
     }
+
+    private boolean isMealWasteful(int buffetCycle, int i) {
+        return mealsOnDisplay.get(i).meal().getDurability() == MealDurability.SHORT && buffetCycle - mealsOnDisplay.get(i).servedAtCycle() > 2;
+    }
+
     public int closeBuffet() {
-    int costOfThrownAwayMeals = 0;
+        int costOfThrownAwayMeals = 0;
         for (int i = 0; i < mealsOnDisplay.size(); i++) {
             if (mealsOnDisplay.get(i).meal().getDurability() != MealDurability.LONG) {
                 costOfThrownAwayMeals += mealsOnDisplay.get(i).meal().getCost();
@@ -68,6 +71,7 @@ public class BuffetServiceImpl implements BuffetService {
         }
         return costOfThrownAwayMeals;
     }
+
     public Map<MealType, Integer> getMapOfBuffet(Buffet buffet) {
         Map<MealType, Integer> buffetMap = new HashMap<>();
         for (MealPortion portion : buffet.mealsOnDisplay()) {
