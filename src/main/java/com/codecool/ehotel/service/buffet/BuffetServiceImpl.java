@@ -77,7 +77,7 @@ public class BuffetServiceImpl implements BuffetService {
                 buffetMap.put(portion.meal(), buffetMap.get(portion.meal()) + 1);
             }
         }
-        System.out.println(buffetMap);
+        //System.out.println(buffetMap);
         return buffetMap;
     }
 }
