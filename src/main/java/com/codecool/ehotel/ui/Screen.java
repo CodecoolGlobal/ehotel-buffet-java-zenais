@@ -13,15 +13,24 @@ public class Screen {
     public void displayBreakfastSeason(SuccessMetrics seasonMetrics, List<SuccessMetrics> dailyMetricsList) {
         int day = 1;
         int sumDailyGuests = 0;
-        System.out.println("--------------------------");
+        System.out.println("===============================================");
+        System.out.println("BREAKFAST STATISTICS");
+        System.out.println("-----------------------------------------------");
         for (SuccessMetrics metrics : dailyMetricsList) {
-            System.out.println(day + ": " + metrics.getCostOfWastedFood() + " | " + metrics.getNumberOfUnhappyGuests() + "/" + metrics.getTotalGuests());
+            System.out.format("Day %-2d | Waste: %6d coins | Unhappy: %2d/%2d\n",
+                    day,
+                    metrics.getCostOfWastedFood(),
+                    metrics.getNumberOfUnhappyGuests(),
+                    metrics.getTotalGuests());
             day += 1;
             sumDailyGuests += metrics.getTotalGuests();
         }
-        System.out.println("--------------------------");
-        System.out.println("Total: " + seasonMetrics.getCostOfWastedFood() + " | " + seasonMetrics.getNumberOfUnhappyGuests() + "/" + sumDailyGuests);
-        System.out.println("==========================");
+        System.out.println("-----------------------------------------------");
+        System.out.format("Total: | Waste: %6d coins | Unhappy: %d/%d\n",
+                    seasonMetrics.getCostOfWastedFood(),
+                    seasonMetrics.getNumberOfUnhappyGuests(),
+                    sumDailyGuests);
+        System.out.println("===============================================");
     }
 
     public void printGuestStatistics(String title,List<MealServiceStatistics> statistics, double averageSatisfaction, double vasteCostRatio) {
