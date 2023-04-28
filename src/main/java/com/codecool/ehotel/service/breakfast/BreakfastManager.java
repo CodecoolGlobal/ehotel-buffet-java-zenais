@@ -1,6 +1,5 @@
 package com.codecool.ehotel.service.breakfast;
 
-import com.codecool.ehotel.data.MealPortion;
 import com.codecool.ehotel.model.Buffet;
 import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.model.GuestType;
@@ -82,11 +81,38 @@ public class BreakfastManager {
         return isHappy;
     }
 
-    public Map<MealType, Integer> getOptimalPortions(Buffet buffet, Map<GuestType, Integer > numberOfGuestsPerType, int cycle, int assumedCostOfUnhappyGuest){
-        Map<MealType, Integer> buffetMap = buffetService.getMapOfBuffet(buffet);
+    public Map<MealType, Integer> getOptimalPortions(Buffet buffet,
+                                                     Map<GuestType, Integer > numberOfGuestsPerType,
+                                                     int cycle,
+                                                     int assumedCostOfUnhappyGuest){
         int[] percentageForCycles = {40, 40, 40, 40, 40, 100, 0, 0};
         Map<MealType, Integer> portionsToRefill = new HashMap<>();
 
+        fillRefillMap(numberOfGuestsPerType, cycle, percentageForCycles, portionsToRefill);
+        reduceRefillMap(buffet, portionsToRefill);
+
+        return portionsToRefill;
+    }
+
+    private static void reduceRefillMap(Buffet buffet, Map<MealType, Integer> portionsToRefill) {
+        for (int i = 0; i < buffet.mealsOnDisplay().size(); i++) {
+            if (portionsToRefill.containsKey(buffet.mealsOnDisplay().get(i).meal())) {
+                if (portionsToRefill.get(buffet.mealsOnDisplay().get(i).meal()) > 1) {
+                    portionsToRefill.put((MealType) buffet.mealsOnDisplay().get(i).meal(),
+                                        portionsToRefill.get(buffet.mealsOnDisplay().get(i).meal()) - 1);
+                } else {
+                    portionsToRefill.remove(buffet.mealsOnDisplay().get(i).meal());
+                    i--;
+                }
+            }
+        }
+    }
+
+    private void fillRefillMap(Map<GuestType,
+            Integer> numberOfGuestsPerType,
+                               int cycle,
+                               int[] percentageForCycles,
+                               Map<MealType, Integer> portionsToRefill) {
         for (GuestType type : numberOfGuestsPerType.keySet()) {
             Integer numberOfTypeGuests = numberOfGuestsPerType.get(type);
             int mealsToPrep = (int) Math.ceil((double) numberOfTypeGuests /100 * percentageForCycles[cycle - 1]);
@@ -100,17 +126,6 @@ public class BreakfastManager {
                 }
             }
         }
-        for (int i = 0; i < buffet.mealsOnDisplay().size(); i++) {
-            if (portionsToRefill.containsKey(buffet.mealsOnDisplay().get(i).meal())) {
-                if (portionsToRefill.get(buffet.mealsOnDisplay().get(i).meal()) > 1) {
-                    portionsToRefill.put((MealType) buffet.mealsOnDisplay().get(i).meal(), portionsToRefill.get(buffet.mealsOnDisplay().get(i).meal()) - 1);
-                } else {
-                    portionsToRefill.remove(buffet.mealsOnDisplay().get(i).meal());
-                    i--;
-                }
-            }
-        }
-        return portionsToRefill;
     }
 
 
